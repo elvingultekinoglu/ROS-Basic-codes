@@ -60,6 +60,12 @@ bool takeoff_func(fixed_wing::takeoff_srv::Request &req, fixed_wing::takeoff_srv
     return true; 
 }
 
+void gotoposition(){
+    pose.pose.position.z=100; 
+    
+}
+
+
 int main(int argc, char **argv){
     ros::init(argc,argv, "takeoff_code"); 
     ros::NodeHandle nh; 
@@ -101,6 +107,8 @@ int main(int argc, char **argv){
         }
 
         mode.request.custom_mode="OFFBOARD";
+        gotoposition(); 
+ 
 
         if(mode_client.call(mode)==true){
             ROS_INFO("Called setmode");
