@@ -110,10 +110,10 @@ bool takeoff_function(fixed_wing::takeoff_land_srv::Request &req, fixed_wing::ta
             mode.request.custom_mode="OFFBOARD";
             mode_client.call(mode); 
             
-            com.request.altitude=50.0;
+            com.request.altitude=78.48;
             com.request.min_pitch=30.0; 
-            com.request.latitude=50.0;
-            com.request.longitude=0.0;
+            com.request.latitude=0.0;
+            com.request.longitude=40.0;
             com.request.yaw=0.0;
 
             if(takeoff_client.call(com)){
@@ -172,32 +172,15 @@ void pose_stamped(double x, double y, double z){
     pose.pose.position.y=y;
     pose.pose.position.z=z; 
 
-    pos_pub.publish(pose);
+    //pos_pub.publish(pose);
 } 
 
 //// function to assign offboard setpoints 
 bool position_func(fixed_wing::position_srv::Request &req, fixed_wing::position_srv::Response &res){
     
-    struct desired_values {
-        double x;
-        double y;
-        double z; 
-    };  
-    
-    istakeoff=true; 
-    std::vector<desired_values> positions; 
-    
-    ros::Rate looprate(20); 
-
-    positions.reserve(20);
-    positions.push_back({req.poseStamped.pose.position.x,req.poseStamped.pose.position.y,
-    req.poseStamped.pose.position.z});
-
-    for(desired_values &des : positions){
-        pose_stamped(des.x, des.y, des.z); 
-        ros::Duration(10.0).sleep();
-        ros::spinOnce(); 
-    }
+    pose_stamped(req.poseStamped.pose.position.x,req.poseStamped.pose.position.y,
+    req.poseStamped.pose.position.z); 
+    ros::spinOnce(); 
 
     return true; 
 }
@@ -262,8 +245,8 @@ int main(int argc, char **argv){
 
 
         mode.request.custom_mode="OFFBOARD";
-        pose.pose.position.z=50; ///bunu takeoff altitude'u ile aynı değer yapın 
-        pose.pose.position.x=50;
+        pose.pose.position.z=78.48; ///bunu takeoff altitude'u ile aynı değer yapın 
+        pose.pose.position.x=40;
         pose.pose.position.y=0; 
 
 
